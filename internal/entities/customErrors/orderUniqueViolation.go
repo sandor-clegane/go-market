@@ -3,7 +3,7 @@ package customErrors
 import (
 	"fmt"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
 type OrderViolationError struct {

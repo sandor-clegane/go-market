@@ -3,7 +3,7 @@ package utils
 import (
 	"strconv"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
 
 	"github.com/theplant/luhn"
 )

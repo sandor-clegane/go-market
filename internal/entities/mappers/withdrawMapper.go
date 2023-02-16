@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
 func MapToWithdraw(withdrawRequest entities.WithdrawRequest, orderNumber int, userID string) entities.Withdraw {

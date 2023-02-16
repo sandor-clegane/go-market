@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
 func MapToOrder(number int, userID string) entities.Order {

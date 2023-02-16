@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/sandor-clegane/gophermarket/internal/app"
-	"github.com/sandor-clegane/gophermarket/internal/config"
+	"github.com/sandor-clegane/go-market/internal/app"
+	"github.com/sandor-clegane/go-market/internal/config"
 )
 
 func main() {

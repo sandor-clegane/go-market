@@ -1,10 +1,10 @@
 package router
 
 import (
-	"Gophermarket/go-musthave-diploma-tpl/internal/handlers/ordersHandler"
-	"Gophermarket/go-musthave-diploma-tpl/internal/handlers/userHandler"
-	"Gophermarket/go-musthave-diploma-tpl/internal/handlers/withdrawHandler"
-	middleware2 "Gophermarket/go-musthave-diploma-tpl/internal/router/middleware"
+	"github.com/sandor-clegane/go-market/internal/handlers/ordersHandler"
+	"github.com/sandor-clegane/go-market/internal/handlers/userHandler"
+	"github.com/sandor-clegane/go-market/internal/handlers/withdrawHandler"
+	middleware2 "github.com/sandor-clegane/go-market/internal/router/middleware"
 
 	"github.com/go-chi/chi/v5"
 )

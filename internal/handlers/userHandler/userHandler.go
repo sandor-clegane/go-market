@@ -5,10 +5,10 @@ import (
 	"errors"
 	"net/http"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
-	"Gophermarket/go-musthave-diploma-tpl/internal/service/cookieService"
-	"Gophermarket/go-musthave-diploma-tpl/internal/service/userService"
+	"github.com/sandor-clegane/go-market/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/service/cookieService"
+	"github.com/sandor-clegane/go-market/internal/service/userService"
 
 	"github.com/google/uuid"
 )

@@ -3,7 +3,7 @@ package userService
 import (
 	"context"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
 var _ UserService = &userServiceImpl{}

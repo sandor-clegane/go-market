@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/mappers"
-	"Gophermarket/go-musthave-diploma-tpl/internal/service/accrualService"
+	"github.com/sandor-clegane/go-market/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/entities/mappers"
+	"github.com/sandor-clegane/go-market/internal/service/accrualService"
 
 	"github.com/omeid/pgerror"
 )

@@ -4,12 +4,12 @@ import (
 	"context"
 	"sort"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/mappers"
-	"Gophermarket/go-musthave-diploma-tpl/internal/storage/orderStorage"
-	"Gophermarket/go-musthave-diploma-tpl/internal/storage/withdrawStorage"
-	"Gophermarket/go-musthave-diploma-tpl/internal/utils"
+	"github.com/sandor-clegane/go-market/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/entities/mappers"
+	"github.com/sandor-clegane/go-market/internal/storage/orderStorage"
+	"github.com/sandor-clegane/go-market/internal/storage/withdrawStorage"
+	"github.com/sandor-clegane/go-market/internal/utils"
 )
 
 type withdrawServiceImpl struct {

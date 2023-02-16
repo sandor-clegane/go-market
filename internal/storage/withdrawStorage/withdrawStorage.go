@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
 const (

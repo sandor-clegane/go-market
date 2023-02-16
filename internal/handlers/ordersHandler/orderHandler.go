@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
-	"Gophermarket/go-musthave-diploma-tpl/internal/service/cookieService"
-	"Gophermarket/go-musthave-diploma-tpl/internal/service/orderService"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/service/cookieService"
+	"github.com/sandor-clegane/go-market/internal/service/orderService"
 )
 
 type orderHandlerImpl struct {

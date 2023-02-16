@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
-	"Gophermarket/go-musthave-diploma-tpl/internal/storage/userStorage"
+	"github.com/sandor-clegane/go-market/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/storage/userStorage"
 )
 
 type userServiceImpl struct {

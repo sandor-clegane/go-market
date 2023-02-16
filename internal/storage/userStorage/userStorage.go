@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities"
-	"Gophermarket/go-musthave-diploma-tpl/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/entities"
+	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
 
 	"github.com/omeid/pgerror"
 )
