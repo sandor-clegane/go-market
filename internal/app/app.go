@@ -25,9 +25,8 @@ import (
 )
 
 const (
-	readTimeout    = 10 * time.Second
-	writeTimeout   = 10 * time.Second
-	maxHeaderBytes = 1 << 20
+	readTimeout  = 10 * time.Second
+	writeTimeout = 10 * time.Second
 )
 
 type App struct {
@@ -63,11 +62,10 @@ func New(cfg config.Config) (*App, error) {
 	urlRouter := router.NewRouter(urlHandler, orderHandler, withdrawHandler)
 
 	server := &http.Server{
-		Addr:           cfg.ServerEndpoint,
-		Handler:        urlRouter,
-		ReadTimeout:    readTimeout,
-		WriteTimeout:   writeTimeout,
-		MaxHeaderBytes: maxHeaderBytes,
+		Addr:         cfg.ServerEndpoint,
+		Handler:      urlRouter,
+		ReadTimeout:  readTimeout,
+		WriteTimeout: writeTimeout,
 	}
 	defer listenForStorageCloseSignal(server, orderRepository)
 	return &App{

@@ -23,17 +23,18 @@ func New(AccrualServiceAddress string) *AccrualService {
 }
 
 //GetOrderInfo - получение информации о расчёте начислений баллов лояльности.
-func (ac *AccrualService) GetOrderInfo(orderID int) (orderInfo *entities.OrderResponse, err error) {
+func (ac *AccrualService) GetOrderInfo(orderID int) (entities.OrderResponse, error) {
 	targetURL := fmt.Sprintf("%s/%s/%d", ac.accrualSystemAddress, getEndpoint, orderID)
 
 	res, err := http.Get(targetURL)
 	if err != nil {
-		return nil, err
+		return entities.OrderResponse{}, err
 	}
 	defer res.Body.Close()
-	err = json.NewDecoder(res.Body).Decode(orderInfo)
+	var orderInfo entities.OrderResponse
+	err = json.NewDecoder(res.Body).Decode(&orderInfo)
 	if err != nil {
-		return nil, err
+		return entities.OrderResponse{}, err
 	}
 
 	return orderInfo, err

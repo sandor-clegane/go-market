@@ -83,9 +83,9 @@ func (w *withdrawHandlerImpl) GetUserBalance(writer http.ResponseWriter, request
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
-
 	writeErr := json.NewEncoder(writer).Encode(balanceRequest)
 	if writeErr != nil {
 		http.Error(writer, writeErr.Error(), http.StatusInternalServerError)

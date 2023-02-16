@@ -63,15 +63,17 @@ func (ws *withdrawStorageImpl) GetAllWithdrawsByUserID(ctx context.Context, user
 	if err != nil {
 		return nil, err
 	}
-	var w entities.Withdraw
+
 	result := make([]entities.Withdraw, 0)
 	for rows.Next() {
+		var w entities.Withdraw
 		err = rows.Scan(&w.Order, &w.Sum, &w.ProcessedAt)
 		if err != nil {
 			return nil, err
 		}
 		result = append(result, w)
 	}
+	
 	err = rows.Err()
 	if err != nil {
 		return nil, err

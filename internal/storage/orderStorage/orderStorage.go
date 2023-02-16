@@ -17,9 +17,8 @@ import (
 )
 
 const (
-	updatingStatusQueueBuffSize = 50
-	workersCount                = 10
-	recheckTimeout              = 5 * time.Second
+	workersCount   = 10
+	recheckTimeout = 5 * time.Second
 )
 
 const (
@@ -73,7 +72,7 @@ func New(db *sql.DB, accrualServiceAddress string) (OrderStorage, error) {
 		},
 		db:                 db,
 		ticker:             time.NewTicker(recheckTimeout),
-		updatingOrderQueue: make(chan int, updatingStatusQueueBuffSize),
+		updatingOrderQueue: make(chan int),
 		accrualService:     accrualService.New(accrualServiceAddress),
 	}
 	err := storage.runUpdateWorkersTaskScheduler()
@@ -119,8 +118,8 @@ func (os *orderStorageImpl) GetAllOrdersByUserID(ctx context.Context, userID str
 		return nil, err
 	}
 	orderList := make([]entities.Order, 0)
-	var o entities.Order
 	for rows.Next() {
+		var o entities.Order
 		err = rows.Scan(&o.Number, &o.Status, &o.Accrual, &o.UploadedAt)
 		if err != nil {
 			return nil, err
@@ -155,8 +154,8 @@ func (os *orderStorageImpl) getOrderNumbersWithNotFinalStatus(ctx context.Contex
 	}
 
 	nums := make([]int, 0)
-	var num int
 	for rows.Next() {
+		var num int
 		err = rows.Scan(&num)
 		if err != nil {
 			return nil, err
@@ -196,7 +195,7 @@ func (os *orderStorageImpl) runUpdateWorkersTaskScheduler() error {
 				if err != nil {
 					return
 				}
-				for num := range nums {
+				for _, num := range nums {
 					err = os.addNumberToUpdatingQueue(num)
 					if err != nil {
 						return
@@ -209,8 +208,8 @@ func (os *orderStorageImpl) runUpdateWorkersTaskScheduler() error {
 }
 
 func (os *orderStorageImpl) runUpdatingStatusWorkerPool() {
+	os.so.wg.Add(workersCount)
 	for i := 0; i < workersCount; i++ {
-		os.so.wg.Add(1)
 		go func(workerID int) {
 			for num := range os.updatingOrderQueue {
 				orderResponse, err := os.accrualService.GetOrderInfo(num)
@@ -218,7 +217,7 @@ func (os *orderStorageImpl) runUpdatingStatusWorkerPool() {
 					log.Printf("get order response error %v", err)
 					continue
 				}
-				order, err := mappers.MapOrderResponseToOrder(*orderResponse)
+				order, err := mappers.MapOrderResponseToOrder(orderResponse)
 				if err != nil {
 					log.Printf("mapper error %v", err)
 					continue

@@ -45,9 +45,9 @@ func (u *userHandlerImpl) Create(writer http.ResponseWriter, request *http.Reque
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	cookieErr := u.cookieService.WriteSigned(writer, userID)
-	if cookieErr != nil {
-		http.Error(writer, cookieErr.Error(), http.StatusInternalServerError)
+	err = u.cookieService.WriteSigned(writer, userID)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -72,9 +72,9 @@ func (u *userHandlerImpl) Login(writer http.ResponseWriter, request *http.Reques
 		return
 	}
 
-	cookieErr := u.cookieService.WriteSigned(writer, userID)
-	if cookieErr != nil {
-		http.Error(writer, cookieErr.Error(), http.StatusInternalServerError)
+	err = u.cookieService.WriteSigned(writer, userID)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
