@@ -3,7 +3,7 @@ package utils
 import (
 	"strconv"
 
-	"github.com/sandor-clegane/go-market/internal/entities/customErrors"
+	"github.com/sandor-clegane/go-market/internal/entities/customerrors"
 
 	"github.com/theplant/luhn"
 )
@@ -14,7 +14,7 @@ func ValidateNumber(order string) (int, error) {
 		return 0, err
 	}
 	if !luhn.Valid(orderNumber) {
-		return 0, customErrors.NewInvalidOrderNumberFormatError(orderNumber)
+		return 0, customerrors.NewInvalidOrderNumberFormatError(orderNumber)
 	}
 	return orderNumber, nil
 }

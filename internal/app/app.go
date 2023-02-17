@@ -10,18 +10,18 @@ import (
 	"time"
 
 	"github.com/sandor-clegane/go-market/internal/config"
-	"github.com/sandor-clegane/go-market/internal/handlers/ordersHandler"
-	"github.com/sandor-clegane/go-market/internal/handlers/userHandler"
-	withdrawHandler2 "github.com/sandor-clegane/go-market/internal/handlers/withdrawHandler"
+	"github.com/sandor-clegane/go-market/internal/handlers/orderhandler"
+	"github.com/sandor-clegane/go-market/internal/handlers/userhandler"
+	withdrawHandler2 "github.com/sandor-clegane/go-market/internal/handlers/withdrawhandler"
 	"github.com/sandor-clegane/go-market/internal/router"
-	cookieService2 "github.com/sandor-clegane/go-market/internal/service/cookieService"
-	orderService2 "github.com/sandor-clegane/go-market/internal/service/orderService"
-	userService2 "github.com/sandor-clegane/go-market/internal/service/userService"
-	withdrawService2 "github.com/sandor-clegane/go-market/internal/service/withdrawService"
+	cookieService2 "github.com/sandor-clegane/go-market/internal/service/cookieservice"
+	orderService2 "github.com/sandor-clegane/go-market/internal/service/orderservice"
+	userService2 "github.com/sandor-clegane/go-market/internal/service/userservice"
+	withdrawService2 "github.com/sandor-clegane/go-market/internal/service/withdrawservice"
 	"github.com/sandor-clegane/go-market/internal/storage"
-	"github.com/sandor-clegane/go-market/internal/storage/orderStorage"
-	"github.com/sandor-clegane/go-market/internal/storage/userStorage"
-	"github.com/sandor-clegane/go-market/internal/storage/withdrawStorage"
+	"github.com/sandor-clegane/go-market/internal/storage/orderstorage"
+	"github.com/sandor-clegane/go-market/internal/storage/userstorage"
+	"github.com/sandor-clegane/go-market/internal/storage/withdrawstorage"
 )
 
 const (
@@ -40,23 +40,23 @@ func New(cfg config.Config) (*App, error) {
 		return nil, err
 	}
 	//create storages
-	userRepository := userStorage.New(db)
-	orderRepository, err := orderStorage.New(db, cfg.AccrualSystemAddress)
+	userStg := userstorage.New(db)
+	orderStg, err := orderstorage.New(db, cfg.AccrualSystemAddress)
 	if err != nil {
 		return nil, err
 	}
-	withdrawRepository := withdrawStorage.New(db)
+	withdrawStg := withdrawstorage.New(db)
 	//create services
-	userService := userService2.New(userRepository)
-	orderService := orderService2.New(orderRepository)
-	withdrawService := withdrawService2.New(withdrawRepository, orderRepository)
+	userService := userService2.New(userStg)
+	orderService := orderService2.New(orderStg)
+	withdrawService := withdrawService2.New(withdrawStg, orderStg)
 	cookieService, err := cookieService2.New(cfg.Key)
 	if err != nil {
 		return nil, err
 	}
 	//create handlers
-	urlHandler := userHandler.New(userService, cookieService)
-	orderHandler := ordersHandler.New(orderService, cookieService)
+	urlHandler := userhandler.New(userService, cookieService)
+	orderHandler := orderhandler.New(orderService, cookieService)
 	withdrawHandler := withdrawHandler2.New(withdrawService, cookieService)
 	//create router
 	urlRouter := router.NewRouter(urlHandler, orderHandler, withdrawHandler)
@@ -67,13 +67,13 @@ func New(cfg config.Config) (*App, error) {
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
 	}
-	defer listenForStorageCloseSignal(server, orderRepository)
+	defer listenForStorageCloseSignal(orderStg)
 	return &App{
 		HTTPServer: server,
 	}, nil
 }
 
-func listenForStorageCloseSignal(server *http.Server, repository orderStorage.OrderStorage) {
+func listenForStorageCloseSignal(repository orderstorage.OrderStorage) {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
