@@ -31,7 +31,11 @@ func New(orderService orderservice.OrderService, cookieService cookieservice.Coo
 //
 //12345678903
 func (o *orderHandlerImpl) Create(writer http.ResponseWriter, request *http.Request) {
-	userID := o.cookieService.AuthenticateUser(writer, request)
+	userID, authErr := o.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	orderNumber, err := io.ReadAll(request.Body)
 	if err != nil {
@@ -65,7 +69,7 @@ func (o *orderHandlerImpl) Create(writer http.ResponseWriter, request *http.Requ
 	writer.WriteHeader(http.StatusAccepted)
 }
 
-//GetAll Хендлер: GET /api/user/orders.
+//GetOrdersHistory Хендлер: GET /api/user/orders.
 //Хендлер доступен только авторизованному пользователю.
 //Номера заказа в выдаче должны быть отсортированы по времени загрузки от самых старых к самым новым.
 //Формат даты — RFC3339.
@@ -78,8 +82,12 @@ func (o *orderHandlerImpl) Create(writer http.ResponseWriter, request *http.Requ
 //
 //GET /api/user/orders HTTP/1.1
 //Content-Length: 0
-func (o *orderHandlerImpl) GetAll(writer http.ResponseWriter, request *http.Request) {
-	userID := o.cookieService.AuthenticateUser(writer, request)
+func (o *orderHandlerImpl) GetOrdersHistory(writer http.ResponseWriter, request *http.Request) {
+	userID, authErr := o.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	ordersListSorted, notFoundErr := o.orderService.GetAllOrdersByUserID(request.Context(), userID)
 	if notFoundErr != nil {

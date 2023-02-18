@@ -37,5 +37,6 @@ func main() {
 	if err = a.Start(); err != http.ErrServerClosed && err != nil {
 		log.Fatalf("HTTP server ListenAndServe: %v", err)
 	}
+	//waiting for shutdown to return
 	<-idleConnectionsClosed
 }

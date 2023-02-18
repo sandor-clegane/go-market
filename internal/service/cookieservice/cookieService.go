@@ -21,12 +21,12 @@ func New(key string) (CookieService, error) {
 	return &cookieServiceImpl{[]byte(key)}, nil
 }
 
-func (c *cookieServiceImpl) AuthenticateUser(w http.ResponseWriter, r *http.Request) string {
+func (c *cookieServiceImpl) AuthenticateUser(w http.ResponseWriter, r *http.Request) (string, error) {
 	userID, authErr := c.ReadSigned(r, "userID")
 	if authErr != nil {
-		http.Error(w, authErr.Error(), http.StatusUnauthorized)
+		return "", authErr
 	}
-	return userID
+	return userID, nil
 }
 
 func (c *cookieServiceImpl) WriteSigned(w http.ResponseWriter, userID string) error {

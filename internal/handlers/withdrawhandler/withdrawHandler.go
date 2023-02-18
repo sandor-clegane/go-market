@@ -38,7 +38,11 @@ func New(withdrawService withdrawservice.WithdrawService,
 //	"sum": 751
 //}
 func (w *withdrawHandlerImpl) Create(writer http.ResponseWriter, request *http.Request) {
-	userID := w.cookieService.AuthenticateUser(writer, request)
+	userID, authErr := w.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	var req entities.WithdrawRequest
 	err := json.NewDecoder(request.Body).Decode(&req)
@@ -76,7 +80,11 @@ func (w *withdrawHandlerImpl) Create(writer http.ResponseWriter, request *http.R
 //GET /api/user/balance HTTP/1.1
 //Content-Length: 0
 func (w *withdrawHandlerImpl) GetUserBalance(writer http.ResponseWriter, request *http.Request) {
-	userID := w.cookieService.AuthenticateUser(writer, request)
+	userID, authErr := w.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	balanceRequest, err := w.withdrawService.GetBalanceInfoByID(request.Context(), userID)
 	if err != nil {
@@ -93,7 +101,7 @@ func (w *withdrawHandlerImpl) GetUserBalance(writer http.ResponseWriter, request
 	}
 }
 
-//GetAll Хендлер: GET /api/user/withdrawals.
+//GetWithdrawalsHistory Хендлер: GET /api/user/withdrawals.
 //Хендлер доступен только авторизованному пользователю.
 //Факты выводов в выдаче должны быть отсортированы по времени вывода от самых старых к самым новым.
 //Формат даты — RFC3339.
@@ -115,8 +123,12 @@ func (w *withdrawHandlerImpl) GetUserBalance(writer http.ResponseWriter, request
 //		"processed_at": "2020-12-09T16:09:57+03:00"
 //	}
 //]
-func (w *withdrawHandlerImpl) GetAll(writer http.ResponseWriter, request *http.Request) {
-	userID := w.cookieService.AuthenticateUser(writer, request)
+func (w *withdrawHandlerImpl) GetWithdrawalsHistory(writer http.ResponseWriter, request *http.Request) {
+	userID, authErr := w.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
 
 	withdrawDTOListSorted, err := w.withdrawService.GetWithdrawsInfoByID(request.Context(), userID)
 	if err != nil {
