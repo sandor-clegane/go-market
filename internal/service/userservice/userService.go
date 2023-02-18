@@ -2,8 +2,7 @@ package userservice
 
 import (
 	"context"
-	"crypto/md5"
-	"io"
+	"encoding/base64"
 
 	"github.com/sandor-clegane/go-market/internal/entities"
 	"github.com/sandor-clegane/go-market/internal/entities/customerrors"
@@ -15,25 +14,21 @@ type userServiceImpl struct {
 }
 
 func (u userServiceImpl) Create(ctx context.Context, user entities.UserRequest, userID string) error {
-	h := md5.New()
-	io.WriteString(h, user.Password)
-	encodedPassword := string(h.Sum(nil))
+	encodedPassword := base64.StdEncoding.EncodeToString([]byte(user.Password))
 
 	return u.userStorage.InsertUser(ctx, userID, user.Login, encodedPassword)
 }
 
 func (u userServiceImpl) Login(ctx context.Context, user entities.UserRequest) (string, error) {
-	//expected hash
 	foundUser, err := u.userStorage.FindByLogin(ctx, user.Login)
 	if err != nil {
 		return "", err
 	}
-	//input hash
-	h := md5.New()
-	io.WriteString(h, user.Password)
-	encodedPassword := string(h.Sum(nil))
-
-	if foundUser.Password != encodedPassword {
+	decodedPassword, err := base64.StdEncoding.DecodeString(foundUser.Password)
+	if err != nil {
+		return "", err
+	}
+	if user.Password != string(decodedPassword) {
 		return "", customerrors.NewInvalidPasswordError(user.Password)
 	}
 
