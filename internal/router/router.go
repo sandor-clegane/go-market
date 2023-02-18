@@ -26,8 +26,8 @@ func NewRouter(h userhandler.UserHandler, o orderhandler.OrderHandler,
 	r.Post(createOrderPath, o.Create)
 	r.Post(createWithdrawPath, w.Create)
 	r.Post(loginUserPath, h.Login)
-	r.Get(createOrderPath, o.GetAll)
+	r.Get(createOrderPath, o.GetOrdersHistory)
 	r.Get(getUserBalancePath, w.GetUserBalance)
-	r.Get(getAllUserWithdrawsPath, w.GetAll)
+	r.Get(getAllUserWithdrawsPath, w.GetWithdrawalsHistory)
 	return r
 }

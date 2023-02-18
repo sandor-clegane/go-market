@@ -231,7 +231,6 @@ func (os *orderStorageImpl) runUpdatingStatusWorkerPool() {
 			}
 			os.so.wg.Done()
 			log.Printf("Worker %d done", workerID)
-			return
 		}(i)
 	}
 }
