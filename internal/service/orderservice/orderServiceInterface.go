@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var _ OrderService = &orderServiceImpl{}
+var _ OrderService = (*orderServiceImpl)(nil)
 
 type OrderService interface {
 	CreateOrder(ctx context.Context, order, userID string) error

@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var us UserStorage = &userStorageImpl{}
+var _ UserStorage = (*userStorageImpl)(nil)
 
 type UserStorage interface {
 	InsertUser(ctx context.Context, userID, login, password string) error

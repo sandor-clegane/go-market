@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-var _ WithdrawHandler = &withdrawHandlerImpl{}
+var _ WithdrawHandler = (*withdrawHandlerImpl)(nil)
 
 type WithdrawHandler interface {
 	Create(writer http.ResponseWriter, request *http.Request)

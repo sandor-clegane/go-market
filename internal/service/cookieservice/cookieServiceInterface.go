@@ -2,7 +2,7 @@ package cookieservice
 
 import "net/http"
 
-var _ CookieService = &cookieServiceImpl{}
+var _ CookieService = (*cookieServiceImpl)(nil)
 
 type CookieService interface {
 	WriteSigned(w http.ResponseWriter, userID string) error

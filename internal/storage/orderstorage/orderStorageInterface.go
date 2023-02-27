@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var os OrderStorage = &orderStorageImpl{}
+var _ OrderStorage = (*orderStorageImpl)(nil)
 
 type OrderStorage interface {
 	FindByNumber(ctx context.Context, number int) (entities.Order, error)

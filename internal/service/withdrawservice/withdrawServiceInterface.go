@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var _ WithdrawService = &withdrawServiceImpl{}
+var _ WithdrawService = (*withdrawServiceImpl)(nil)
 
 type WithdrawService interface {
 	CreateWithdraw(ctx context.Context, withdrawRequest entities.WithdrawRequest, userID string) error

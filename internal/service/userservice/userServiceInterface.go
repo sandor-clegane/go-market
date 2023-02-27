@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var _ UserService = &userServiceImpl{}
+var _ UserService = (*userServiceImpl)(nil)
 
 type UserService interface {
 	Create(ctx context.Context, user entities.UserRequest, userID string) error

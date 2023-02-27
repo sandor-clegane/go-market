@@ -6,7 +6,7 @@ import (
 	"github.com/sandor-clegane/go-market/internal/entities"
 )
 
-var ws WithdrawStorage = &withdrawStorageImpl{}
+var _ WithdrawStorage = (*withdrawStorageImpl)(nil)
 
 type WithdrawStorage interface {
 	InsertWithdraw(ctx context.Context, withdraw entities.Withdraw) error

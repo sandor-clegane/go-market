@@ -35,7 +35,6 @@ func MapOrderResponseToOrder(orderResponse entities.OrderResponse) (entities.Ord
 	number, err := strconv.Atoi(orderResponse.Order)
 	if err != nil {
 		return entities.Order{}, err
-
 	}
 	order := entities.Order{
 		Number: number,

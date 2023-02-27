@@ -37,7 +37,7 @@ func (u *userHandlerImpl) Create(writer http.ResponseWriter, request *http.Reque
 	err = u.userService.Create(request.Context(), user, userID)
 
 	if err != nil {
-		var ve *customerrors.UserLoginUniqueViolation
+		var ve *customerrors.LoginUniqueViolationError
 		if errors.As(err, &ve) {
 			writer.WriteHeader(http.StatusConflict)
 			return
