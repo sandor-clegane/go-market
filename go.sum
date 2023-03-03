@@ -10,3 +10,5 @@ github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4 h1:YP/r0rUeYQ0+FCAae
 github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4/go.mod h1:FfCpBvR6quigRzQl/97DJY0V0vDaPemjPRF/IQx5SuU=
 github.com/theplant/luhn v0.0.0-20170224032821-81a1a381387a h1:8Yp+jFiOdzOTk/YQcKEA/ccK0NQD3LT965HrQgNqd3o=
 github.com/theplant/luhn v0.0.0-20170224032821-81a1a381387a/go.mod h1:ZaMGXj0IgDRrzbd+S4SJEqxUQSOhbsyCbM6hXiIhnXM=
+golang.org/x/time v0.3.0 h1:rg5rLMjNzMS1RkNLzCG38eapWhnYLFYXDXj2gOlr8j4=
+golang.org/x/time v0.3.0/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
