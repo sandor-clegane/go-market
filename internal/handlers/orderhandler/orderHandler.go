@@ -1,0 +1,106 @@
+package orderhandler
+
+import (
+	"encoding/json"
+	"errors"
+	"io"
+	"net/http"
+
+	"github.com/sandor-clegane/go-market/internal/entities/customerrors"
+	"github.com/sandor-clegane/go-market/internal/service/cookieservice"
+	"github.com/sandor-clegane/go-market/internal/service/orderservice"
+)
+
+type orderHandlerImpl struct {
+	orderService  orderservice.OrderService
+	cookieService cookieservice.CookieService
+}
+
+func New(orderService orderservice.OrderService, cookieService cookieservice.CookieService) OrderHandler {
+	return &orderHandlerImpl{orderService, cookieService}
+}
+
+//Create Хендлер: POST /api/user/orders.
+//Хендлер доступен только аутентифицированным пользователям.
+//Номером заказа является последовательность цифр произвольной длины.
+//Формат запроса:
+//
+//POST /api/user/orders HTTP/1.1
+//Content-Type: text/plain
+//...
+//
+//12345678903
+func (o *orderHandlerImpl) Create(writer http.ResponseWriter, request *http.Request) {
+	userID, authErr := o.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	orderNumber, err := io.ReadAll(request.Body)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+	}
+
+	err = o.orderService.CreateOrder(request.Context(), string(orderNumber), userID)
+
+	if err != nil {
+		// номер заказа уже был загружен этим пользователем;
+		var ov *customerrors.OrderViolationError
+		if errors.As(err, &ov) {
+			http.Error(writer, err.Error(), http.StatusOK)
+			return
+		}
+		// номер заказа уже был загружен другим пользователем;
+		var eo *customerrors.ExistedOrderError
+		if errors.As(err, &eo) {
+			http.Error(writer, err.Error(), http.StatusConflict)
+			return
+		}
+		// неверный формат номера заказа;
+		var iof *customerrors.InvalidOrderNumberFormatError
+		if errors.As(err, &iof) {
+			http.Error(writer, err.Error(), http.StatusUnprocessableEntity)
+			return
+		}
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(http.StatusAccepted)
+}
+
+//GetOrdersHistory Хендлер: GET /api/user/orders.
+//Хендлер доступен только авторизованному пользователю.
+//Номера заказа в выдаче должны быть отсортированы по времени загрузки от самых старых к самым новым.
+//Формат даты — RFC3339.
+//Доступные статусы обработки расчётов:
+//	NEW — заказ загружен в систему, но не попал в обработку;
+//	PROCESSING — вознаграждение за заказ рассчитывается;
+//	INVALID — система расчёта вознаграждений отказала в расчёте;
+//	PROCESSED — данные по заказу проверены и информация о расчёте успешно получена.
+//Формат запроса:
+//
+//GET /api/user/orders HTTP/1.1
+//Content-Length: 0
+func (o *orderHandlerImpl) GetOrdersHistory(writer http.ResponseWriter, request *http.Request) {
+	userID, authErr := o.cookieService.AuthenticateUser(writer, request)
+	if authErr != nil {
+		http.Error(writer, authErr.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	ordersListSorted, notFoundErr := o.orderService.GetAllOrdersByUserID(request.Context(), userID)
+	if notFoundErr != nil {
+		http.Error(writer, notFoundErr.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	writeErr := json.NewEncoder(writer).Encode(ordersListSorted)
+
+	if writeErr != nil {
+		http.Error(writer, writeErr.Error(), http.StatusInternalServerError)
+		return
+	}
+}
